@@ -2,6 +2,7 @@
 /* jshint esversion: 6 */
 const program = require('commander');
 const tcpp = require('tcp-ping');
+const util = require('util');
 
 program
   .version('0.1.0')
@@ -31,8 +32,8 @@ tcpp.ping({ address: program.host,
   var avg = sum / successCount;
 
   lossFloat = 100.0*(errCount/data.attempts);
-  console.log('%d connections attempted, %d connections made, %f%% loss',
-              data.attempts, successCount, lossFloat.toFixed(1));
-  console.log('round-trip min/avg/max = %f/%f/%f ms', data.min.toFixed(3),
-              avg.toFixed(3), data.max.toFixed(3));
+  console.log(util.format('%d connections attempted, %d connections made, %f%% loss',
+              data.attempts, successCount, lossFloat.toFixed(1)));
+  console.log(util.format('round-trip min/avg/max = %f/%f/%f ms', data.min.toFixed(3),
+              avg.toFixed(3), data.max.toFixed(3)));
 });
