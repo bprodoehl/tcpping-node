@@ -13,6 +13,26 @@ program
 tcpp.ping({ address: program.host,
             port: program.port,
             attempts: program.count }, function(err, data) {
-  console.log('%d connections made', data.attempts);
-  console.log('round-trip min/avg/max = %f/%f/%f', data.min, data.avg, data.max);
+  var errCount = 0;
+  var successCount = 0;
+  var sum = 0;
+  if (err) {
+    console.log('Encountered errors during the test: ' + err);
+  }
+  for (var i in data.results) {
+    var result = data.results[i];
+    if (result.err) {
+      errCount = errCount + 1;
+    } else {
+      successCount = successCount + 1;
+      sum = sum + result.time;
+    }
+  }
+  var avg = sum / successCount;
+
+  lossFloat = 100.0*(errCount/data.attempts);
+  console.log('%d connections attempted, %d connections made, %f%% loss',
+              data.attempts, successCount, lossFloat.toFixed(1));
+  console.log('round-trip min/avg/max = %f/%f/%f ms', data.min.toFixed(3),
+              avg.toFixed(3), data.max.toFixed(3));
 });
